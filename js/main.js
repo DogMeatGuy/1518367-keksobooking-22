@@ -44,52 +44,52 @@ const getRandomArray = (array) => {
 
 //Набор данных и массивов для получения "объявлений о сдаче"
 
-const minAvatarNumb = 1;
-const maxAvatarNumb = 8;
-const titleData = 'Информация о помещении.';
-const maxGeoDataX = 35.70000;
-const minGeoDataX = 35.65000;
-const maxGeoDataY = 139.80000;
-const minHeoDataY = 139.70000;
-const maxPriceValue = 20000;
+const AvatarValue = { MIN: 1, MAX: 8 };
+const TITLE_DATA = 'Информация о помещении.';
+const GeoDataValueX = { MIN: 35.65000, MAX: 35.70000 };
+const GeoDataValueY = { MIN: 139.70000, MAX: 139.80000 };
+const MAX_PRICE_VALUE = 20000;
 const placeType = ['palace', 'flat', 'house', 'bungalow'];
-const maxRoomsValue = 4;
-const maxGuestsValue = 10;
+const MAX_ROOMS_VALUE = 4;
+const MAX_GUESTS_VALUE = 10;
 const checkinTime = ['12:00', '13:00', '14:00'];
 const checkoutTime = ['2:00', '13:00', '14:00'];
 const featuresData = ['elevator', 'dishwasher', 'parking', 'wifi', 'washer', 'conditioner'];
-const descriptionData = 'Обычный бомжатник для тебя и твоих дружков за странную символическую сумму';
+const DESCRIPTION_DATA = 'Неплохое место что бы отдохнуть Вам и Вашим близким';
 const photosData = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-const maxArrayValue = 10;
+const MAX_ARRAY_VALUE = 10;
 
 
 //Функция возвращающая массив из рандомных данных
 
 const getArrayRandomData = () => {
-  const getRandomAvatarNumb = getRandomNumber(minAvatarNumb, maxAvatarNumb);
-  const getGeoDataX = getRandomFloat(minGeoDataX, maxGeoDataX);
-  const getGeoDataY = getRandomFloat(minHeoDataY, maxGeoDataY);
+  const getRandomAvatarNumb = getRandomNumber(AvatarValue.MIN, AvatarValue.MAX);
+  const getGeoDataX = getRandomFloat(GeoDataValueX.MIN, GeoDataValueX.MAX);
+  const getGeoDataY = getRandomFloat(GeoDataValueY.MIN, GeoDataValueY.MAX);
 
   return {
     author: {
       avatar: 'img/avatars/user0' + getRandomAvatarNumb + '.png',
     },
     offer: {
-      title: titleData,
-      address: getGeoDataX, getGeoDataY,
-      price: getRandomNumber(1, maxPriceValue),
+      title: TITLE_DATA,
+      address: {
+        x: getGeoDataX,
+        y: getGeoDataY
+      },
+      price: getRandomNumber(1, MAX_PRICE_VALUE),
       type: getRandomElement(placeType),
-      rooms: getRandomNumber(1, maxRoomsValue),
-      guests: getRandomNumber(1, maxGuestsValue),
+      rooms: getRandomNumber(1, MAX_ROOMS_VALUE),
+      guests: getRandomNumber(1, MAX_GUESTS_VALUE),
       checkin: getRandomElement(checkinTime),
       checkout: getRandomElement(checkoutTime),
       features: getRandomArray(featuresData),
-      description: descriptionData,
+      description: DESCRIPTION_DATA,
       photos: getRandomArray(photosData),
     },
     location: {
       x: getGeoDataX,
-      y: getGeoDataY,
+      y: getGeoDataY
     },
   };
 };
@@ -97,8 +97,8 @@ const getArrayRandomData = () => {
 //Функция возвращающая массив из полученых рандомных данных
 
 const createArrayDeclarations = (arrayCount) => {
-  const arrayDeclarations = new Array(arrayCount).fill(null).map(() => getArrayRandomData());
-  return arrayDeclarations
+  return new Array(arrayCount).fill(null).map(() => getArrayRandomData());
 };
 
-const declarations = createArrayDeclarations(maxArrayValue);
+const declarations = createArrayDeclarations(MAX_ARRAY_VALUE);
+
