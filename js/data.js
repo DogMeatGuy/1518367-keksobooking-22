@@ -1,4 +1,5 @@
-import  {getRandomNumber, getRandomFloat, getRandomElement, getRandomArray} from './util.js';
+import { getRandomNumber, getRandomFloat, getRandomElement, getRandomArray } from './util.js';
+
 //Набор данных и массивов для получения "объявлений о сдаче"
 
 const AvatarValue = { MIN: 1, MAX: 8 };
@@ -50,4 +51,4 @@ const getArrayRandomData = () => {
     },
   };
 };
-export {getArrayRandomData, MAX_ARRAY_VALUE};
+export { getArrayRandomData, MAX_ARRAY_VALUE };

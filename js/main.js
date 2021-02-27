@@ -1,4 +1,4 @@
-import {getArrayRandomData, MAX_ARRAY_VALUE} from './data.js';
+import { getArrayRandomData, MAX_ARRAY_VALUE } from './data.js';
 
 //Функция возвращающая массив из полученых рандомных данных
 
@@ -8,4 +8,3 @@ const createArrayDeclarations = (arrayCount) => {
 
 const declarations = createArrayDeclarations(MAX_ARRAY_VALUE);
 
-console.log(declarations);
