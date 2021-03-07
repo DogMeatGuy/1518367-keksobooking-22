@@ -41,7 +41,7 @@ const getArrayRandomData = () => {
       title: getRandomElement(TITLE_DATA),
       address: {
         x: getGeoDataX,
-        y: getGeoDataY
+        y: getGeoDataY,
       },
       price: getRandomNumber(1, MAX_PRICE_VALUE),
       type: getRandomElement(PLACE_TYPE),
@@ -55,7 +55,7 @@ const getArrayRandomData = () => {
     },
     location: {
       x: getGeoDataX,
-      y: getGeoDataY
+      y: getGeoDataY,
     },
   };
 };
