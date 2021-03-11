@@ -42,4 +42,4 @@ const getRandomArray = (array) => {
   return randomArray;
 };
 
-export {getRandomNumber, getRandomFloat, getRandomElement, getRandomArray};
+export { getRandomNumber, getRandomFloat, getRandomElement, getRandomArray };

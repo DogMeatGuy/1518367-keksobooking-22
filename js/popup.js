@@ -1,12 +1,5 @@
-import { getArrayRandomData, MAX_ARRAY_VALUE, houseTranslator } from './data.js';
+import { houseResource } from './data.js';
 
-//Функция возвращающая массив из полученых рандомных данных
-
-const createArrayDeclarations = (arrayCount) => {
-  return new Array(arrayCount).fill(null).map(() => getArrayRandomData());
-};
-
-const declarations = createArrayDeclarations(MAX_ARRAY_VALUE);
 
 //Функция заполняющая шаблон попапа
 
@@ -53,7 +46,7 @@ const getPopupCard = ({
 
   if (type) {
     const popupType = popupCard.querySelector('.popup__type');
-    popupType.textContent = houseTranslator[type];
+    popupType.textContent = houseResource[type];
   }
 
   if (rooms && guests) {
@@ -107,11 +100,11 @@ const getPopupCard = ({
   return popupCard;
 }
 
-const renderPopup = (container, data) => {
+const renderPopup = (data) => {
   const popupCard = getPopupCard(data);
-  container.appendChild(popupCard);
+  mapCanvas.appendChild(popupCard);
 }
 
-renderPopup(mapCanvas, declarations[0]);
+
 
 export { renderPopup };
