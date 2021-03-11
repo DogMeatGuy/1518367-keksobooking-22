@@ -19,11 +19,11 @@ const MAX_ARRAY_VALUE = 10;
 
 //Модуль для возврата типа жилья
 
-const houseTranslator = {
-  'palace': 'Дворец',
-  'flat': 'Квартира',
-  'house': 'Дом',
-  'bungalow': 'Бунгало',
+const houseResource = {
+  palace: 'Дворец',
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalow: 'Бунгало',
 }
 
 //Функция возвращающая массив из рандомных данных
@@ -59,4 +59,4 @@ const getArrayRandomData = () => {
     },
   };
 };
-export { getArrayRandomData, MAX_ARRAY_VALUE, houseTranslator };
+export { getArrayRandomData, MAX_ARRAY_VALUE, houseResource };
