@@ -107,4 +107,4 @@ const renderPopup = (data) => {
 
 
 
-export { renderPopup };
+export { renderPopup, getPopupCard };
