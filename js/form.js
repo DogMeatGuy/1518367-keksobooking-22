@@ -1,12 +1,15 @@
 import { housingPriceResource } from './consts.js';
+import { mainMarker } from './map.js';
 
 const adForm = document.querySelector('.ad-form');
 const filterForm = document.querySelector('.map__filters');
+const inputAddress = document.querySelector('#address');
 const formElements = document.querySelectorAll('.map__filter, .map__features, .ad-form-header, .ad-form__element');
 const timeIn = adForm.querySelector('#timein');
 const timeOut = adForm.querySelector('#timeout');
 const price = adForm.querySelector('#price');
 const housingType = adForm.querySelector('#type');
+const { lat, lng } = mainMarker.getLatLng();
 
 
 const deactivateFormElements = (elements) => {
@@ -23,12 +26,6 @@ const deactivateForms = () => {
   deactivateFormElements(formElements);
 };
 
-const activateForms = () => {
-  filterForm.classList.remove('map__filters--disabled');
-  adForm.classList.remove('ad-form--disabled');
-  activateFormElements(formElements);
-};
-
 const typeChangeHandler = () => {
   price.placeholder = housingPriceResource[housingType.value];
   price.min = housingPriceResource[housingType.value];
@@ -39,6 +36,9 @@ const timeChangeHandler = (evt) => {
   timeIn.value = evt.target.value;
 };
 
+const getInputAddress = () => {
+  inputAddress.value = `${lat.toFixed(5)} ${lng.toFixed(5)}`;
+}
 
 const init = () => {
   housingType.addEventListener('change', typeChangeHandler);
@@ -46,6 +46,12 @@ const init = () => {
   timeOut.addEventListener('change', timeChangeHandler);
 }
 
-deactivateForms();
+//deactivateForms();
 
-export { init, activateForms };
+const activateForms = () => {
+  filterForm.classList.remove('map__filters--disabled');
+  adForm.classList.remove('ad-form--disabled');
+  activateFormElements(formElements);
+};
+
+export { init, activateForms, getInputAddress };
