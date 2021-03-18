@@ -46,7 +46,7 @@ const init = () => {
   timeOut.addEventListener('change', timeChangeHandler);
 }
 
-//deactivateForms();
+deactivateForms();
 
 const activateForms = () => {
   filterForm.classList.remove('map__filters--disabled');
