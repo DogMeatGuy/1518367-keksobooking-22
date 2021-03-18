@@ -100,11 +100,11 @@ const getPopupCard = ({
   return popupCard;
 }
 
-const renderPopup = (data) => {
-  const popupCard = getPopupCard(data);
-  mapCanvas.appendChild(popupCard);
-}
+//const renderPopup = (data) => {
+//  const popupCard = getPopupCard(data);
+//  mapCanvas.appendChild(popupCard);
+//}
 
 
 
-export { renderPopup, getPopupCard };
+export { getPopupCard };
