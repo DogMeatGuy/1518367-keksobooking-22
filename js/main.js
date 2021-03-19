@@ -14,8 +14,3 @@ const items = createArrayDeclarations(MAX_ARRAY_VALUE);
 
 init();
 initMap(items);
-
-
-
-
-

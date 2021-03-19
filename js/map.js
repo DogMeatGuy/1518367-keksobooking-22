@@ -63,14 +63,12 @@ const createMarker = (lat, lng, icon, onMarkerMove) => {
 };
 
 
-const addMarkers = (items, map, getPopupCard) => {
+const addMarkers = (items, map) => {
   items.forEach((item) => {
     item.location.x
     item.location.y
-    const offerMarker = createMarker(item.location.x, item.location.y, createIcon('./img/pin.svg'))
-    offerMarker.bindPopup(() =>{
-      getPopupCard(item);
-    });
+    const offerMarker = createMarker(item.location.x, item.location.y, createIcon('./img/pin.svg'));
+    offerMarker.bindPopup(getPopupCard(item), { keepInView: true });
     offerMarker.addTo(map);
   });
 };
