@@ -1,5 +1,4 @@
 import { housingPriceResource } from './consts.js';
-import { mainMarker } from './map.js';
 
 const adForm = document.querySelector('.ad-form');
 const filterForm = document.querySelector('.map__filters');
@@ -9,7 +8,6 @@ const timeIn = adForm.querySelector('#timein');
 const timeOut = adForm.querySelector('#timeout');
 const price = adForm.querySelector('#price');
 const housingType = adForm.querySelector('#type');
-const { lat, lng } = mainMarker.getLatLng();
 
 
 const deactivateFormElements = (elements) => {
@@ -36,7 +34,7 @@ const timeChangeHandler = (evt) => {
   timeIn.value = evt.target.value;
 };
 
-const getInputAddress = () => {
+const setInputAddress = (lat, lng) => {
   inputAddress.value = `${lat.toFixed(5)} ${lng.toFixed(5)}`;
 }
 
@@ -54,4 +52,4 @@ const activateForms = () => {
   activateFormElements(formElements);
 };
 
-export { init, activateForms, getInputAddress };
+export { init, activateForms, setInputAddress };

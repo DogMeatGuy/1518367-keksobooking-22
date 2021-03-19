@@ -1,11 +1,7 @@
-//import { renderPopup } from './popup.js';
-import { activateForms, getInputAddress } from './form.js';
-import { getArrayRandomData, MAX_ARRAY_VALUE } from './data.js';
-const createArrayDeclarations = (arrayCount) => {
-  return new Array(arrayCount).fill(null).map(() => getArrayRandomData());
-};
+import { getPopupCard } from './popup.js';
+import { activateForms, setInputAddress } from './form.js';
 
-const items = createArrayDeclarations(MAX_ARRAY_VALUE);
+
 const MapGeo = {
   LAT: 35.68950,
   LNG: 139.69171,
@@ -32,28 +28,21 @@ const createMap = () => {
   return map;
 };
 
-const mainPinIcon = L.icon({
-  iconUrl: './img/main-pin.svg',
-  iconSize: [52, 52],
-  iconAnchor: [26, 52],
-});
+
 
 const createIcon = (iconUrl) => {
   return L.icon({
-    iconUrl: './img/main-pin.svg',
+    iconUrl,
     iconSize: [52, 52],
     iconAnchor: [26, 52],
   });
 };
 
-let mainMarker = L.marker(
-  { lat: MapGeo.LAT, lng: MapGeo.LNG },
-  { draggable: true, mainPinIcon },
-);
+let mainMarker = createIcon('./img/main-pin.svg');
 
 const onMainMarkerMove = () => {
   const { lat, lng } = mainMarker.getLatLng();
-  getInputAddress(lat, lng);
+  setInputAddress(lat, lng);
 };
 
 const createMarker = (lat, lng, icon, onMarkerMove) => {
@@ -68,29 +57,33 @@ const createMarker = (lat, lng, icon, onMarkerMove) => {
     },
   );
   if (onMarkerMove) {
-    mainMarker.on('move', onMarkerMove);
+    marker.on('move', onMarkerMove);
   }
   return marker;
 };
 
-const addMarkers = (items) => {
+
+const addMarkers = (items, map, getPopupCard) => {
   items.forEach((item) => {
-    item.offer.address.x
-    item.offer.address.y
-    mainMarker = createMarker(offer.LAT, offer.LNG, createIcon(offer.img))
-    mainMarker.addTo(map);
+    item.location.x
+    item.location.y
+    const offerMarker = createMarker(item.location.x, item.location.y, createIcon('./img/pin.svg'))
+    offerMarker.bindPopup(() =>{
+      getPopupCard(item);
+    });
+    offerMarker.addTo(map);
   });
 };
 
 
 
-const initMap = (offers) => {
+const initMap = (offerMarker) => {
   const map = createMap();
   mainMarker = createMarker(MapGeo.LAT, MapGeo.LNG, createIcon('./img/main-pin.svg'), onMainMarkerMove);
   mainMarker.addTo(map);
-  addMarkers(offers, map);
-}
+  addMarkers(offerMarker, map);
+};
 
 
 
-export { initMap, mainMarker };
+export { initMap };
