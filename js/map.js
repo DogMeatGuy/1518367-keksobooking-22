@@ -38,12 +38,12 @@ const createIcon = (iconUrl) => {
   });
 };
 
-let mainMarker = createIcon('./img/main-pin.svg');
 
 const onMainMarkerMove = () => {
   const { lat, lng } = mainMarker.getLatLng();
   setInputAddress(lat, lng);
 };
+
 
 const createMarker = (lat, lng, icon, onMarkerMove) => {
   const marker = L.marker(
@@ -73,15 +73,13 @@ const addMarkers = (items, map) => {
   });
 };
 
-
+let mainMarker = createMarker(MapGeo.LAT, MapGeo.LNG, createIcon('./img/main-pin.svg'), onMainMarkerMove);
 
 const initMap = (offerMarker) => {
   const map = createMap();
-  mainMarker = createMarker(MapGeo.LAT, MapGeo.LNG, createIcon('./img/main-pin.svg'), onMainMarkerMove);
   mainMarker.addTo(map);
   addMarkers(offerMarker, map);
 };
-
 
 
 export { initMap };
