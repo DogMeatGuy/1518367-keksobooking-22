@@ -1,11 +1,9 @@
 import { getPopupCard } from './popup.js';
 import { activateForms, setInputAddress } from './form.js';
+import { MapGeo } from './consts.js'
 
 
-const MapGeo = {
-  LAT: 35.68950,
-  LNG: 139.69171,
-}
+
 
 
 const createMap = () => {
@@ -28,7 +26,7 @@ const createMap = () => {
   return map;
 };
 
-
+let mainMarker;
 
 const createIcon = (iconUrl) => {
   return L.icon({
@@ -73,10 +71,11 @@ const addMarkers = (items, map) => {
   });
 };
 
-let mainMarker = createMarker(MapGeo.LAT, MapGeo.LNG, createIcon('./img/main-pin.svg'), onMainMarkerMove);
+
 
 const initMap = (offerMarker) => {
   const map = createMap();
+  mainMarker = createMarker(MapGeo.LAT, MapGeo.LNG, createIcon('./img/main-pin.svg'), onMainMarkerMove);
   mainMarker.addTo(map);
   addMarkers(offerMarker, map);
 };

@@ -1,4 +1,4 @@
-import { housingPriceResource } from './consts.js';
+import { housingPriceResource, MapGeo } from './consts.js';
 
 const adForm = document.querySelector('.ad-form');
 const filterForm = document.querySelector('.map__filters');
@@ -25,9 +25,25 @@ const deactivateForms = () => {
   deactivateFormElements(formElements);
 };
 
+
+let setDefaultInputPrice = () => {
+  price.min = 1000;
+};
+
+const PRICE_MAX = 1000000;
+
+const priceValidity = () => {
+  if (price.validity.valueMissing) {
+    price.setCustomValidity(`Обязательное поле. Максимальная цена — ${PRICE_MAX}`);
+  } else {
+    price.setCustomValidity('');
+  }
+};
+
 const typeChangeHandler = () => {
   price.placeholder = housingPriceResource[housingType.value];
   price.min = housingPriceResource[housingType.value];
+  priceValidity();
 };
 
 const timeChangeHandler = (evt) => {
@@ -35,13 +51,19 @@ const timeChangeHandler = (evt) => {
   timeIn.value = evt.target.value;
 };
 
+
 const setInputAddress = (lat, lng) => {
   inputAddress.value = `${lat.toFixed(5)} ${lng.toFixed(5)}`;
+}
+
+const setDefaultInputAdress = () => {
+  setInputAddress(MapGeo.LAT, MapGeo.LNG);
 }
 
 const activateForms = () => {
   filterForm.classList.remove('map__filters--disabled');
   adForm.classList.remove('ad-form--disabled');
+  setDefaultInputAdress();
   activateFormElements(formElements);
 };
 
@@ -108,16 +130,6 @@ headline.addEventListener('input', () => {
   headline.reportValidity();
 });
 
-const PRICE_MAX = 1000000;
-
-price.addEventListener('input', () => {
-  if (price.validity.valueMissing) {
-    price.setCustomValidity(`Обязательное поле. Максимальная цена — ${PRICE_MAX}`);
-  } else {
-    price.setCustomValidity('');
-  }
-});
-
 inputAddress.addEventListener('invalid', () => {
   if (inputAddress.validity.valueMissing) {
     inputAddress.setCustomValidity('Обязательное поле');
@@ -127,7 +139,9 @@ inputAddress.addEventListener('invalid', () => {
 });
 
 const init = () => {
+  setDefaultInputPrice();
   housingType.addEventListener('change', typeChangeHandler);
+  price.addEventListener('change', priceValidity);
   timeIn.addEventListener('change', timeChangeHandler);
   timeOut.addEventListener('change', timeChangeHandler);
 }
