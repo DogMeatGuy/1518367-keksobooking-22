@@ -17,7 +17,7 @@ const createMap = () => {
     .setView({
       lat: MapGeo.LAT,
       lng: MapGeo.LNG,
-    }, 10);
+    }, 8);
 
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
