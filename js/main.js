@@ -1,5 +1,5 @@
 
-import { init } from './form.js';
+import { initForm } from './form.js';
 import { initMap } from './map.js';
 import { getArrayRandomData, MAX_ARRAY_VALUE } from './data.js';
 
@@ -12,5 +12,5 @@ const items = createArrayDeclarations(MAX_ARRAY_VALUE);
 
 
 
-init();
+initForm();
 initMap(items);

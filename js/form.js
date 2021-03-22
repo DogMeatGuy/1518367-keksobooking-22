@@ -19,6 +19,9 @@ const DEFAULT_VALUE_PRICE = 1000;
 const PRICE_MAX = 1000000;
 const QUANTITY_MIN = 0;
 const QUANTITY_MAX = 100;
+const ONE_ROOM_VALUE = 1;
+const TWO_ROOM_VALUE = 2;
+
 
 
 const deactivateFormElements = (elements) => {
@@ -50,17 +53,6 @@ const roomNumberLoadHandler = () => {
   capacity.value = numberRooms.value;
 };
 
-const typeChangeHandler = () => {
-  price.placeholder = housingMinPrice[housingType.value];
-  price.min = housingMinPrice[housingType.value];
-};
-
-const timeChangeHandler = (evt) => {
-  timeOut.value = evt.target.value;
-  timeIn.value = evt.target.value;
-};
-
-
 const setInputAddress = (lat, lng) => {
   inputAddress.value = `${lat.toFixed(MAX_VALUE_DOT)} ${lng.toFixed(MAX_VALUE_DOT)}`;
 }
@@ -72,20 +64,39 @@ const setDefaultInputAdress = () => {
 const formValidity = () => {
   price.addEventListener('input', () => {
     if (price.validity.valueMissing) {
-      price.setCustomValidity(`Обязательное поле. Максимальная цена — ${PRICE_MAX}`);
+      price.setCustomValidity('Обязательное поле. Максимальная цена — ' + (PRICE_MAX));
     } else {
       price.setCustomValidity('');
     }
   });
 
-  capacity.addEventListener('input', () => {
+  housingType.addEventListener('change', () => {
+    price.placeholder = housingMinPrice[housingType.value];
+    price.min = housingMinPrice[housingType.value];
+  });
+
+  timeIn.addEventListener('change', (evt) => {
+    timeIn.value = evt.target.value;
+    timeOut.value = evt.target.value;
+  });
+
+  timeOut.addEventListener('change', (evt) => {
+    timeOut.value = evt.target.value;
+    timeIn.value = evt.target.value;
+  });
+
+  capacity.addEventListener('change', () => {
     const roomNumberValue = Number(numberRooms.value);
     const capacityValue = Number(capacity.value);
     let message = '';
-    if (roomNumberValue < QUANTITY_MAX && capacityValue < 1 || capacityValue > roomNumberValue) {
-      message = `Укажите количество гостей. Минимальное количество - 1. Максимальное количество гостей - ${numberRooms.value}`
-    } else if (roomNumberValue >= QUANTITY_MAX && capacityValue > QUANTITY_MIN) {
-      message = 'Слишком много комнат. Выберите пункт "не для гостей"'
+    if (roomNumberValue < capacityValue && roomNumberValue == ONE_ROOM_VALUE ) {
+      message = 'Слишком много гостей для ' + (roomNumberValue) + ' комнаты. Количество комнат может соответствовать количеству гостей но не может быть меньше количества гостей.'
+    } else if (roomNumberValue < capacityValue && roomNumberValue == TWO_ROOM_VALUE) {
+      message = 'Слишком много гостей для ' + (roomNumberValue) + ' комнат. Количество комнат может соответствовать количеству гостей но не может быть меньше количества гостей.'
+    } else if (roomNumberValue == QUANTITY_MAX && capacityValue != QUANTITY_MIN) {
+      message = 'Невозможно выбрать этот вариант, так как слишком большое количество комнат. Выберите пожалуйста вариант "Не для гостей"'
+    } else if (capacityValue == QUANTITY_MIN && roomNumberValue != QUANTITY_MAX) {
+      message = 'Невозможно выбрать этот вариант, так как нельзя использовать вариант "Не для гостей" для выбранного количества комнат. Выберите вариант "100 комнат"'
     }
     capacity.setCustomValidity(message);
     capacity.reportValidity();
@@ -113,15 +124,12 @@ const formValidity = () => {
   });
 };
 
-const init = () => {
+const initForm = () => {
   setDefaultInputPrice();
-  housingType.addEventListener('change', typeChangeHandler);
-  timeIn.addEventListener('change', timeChangeHandler);
-  timeOut.addEventListener('change', timeChangeHandler);
   formValidity();
   roomNumberLoadHandler();
 }
 
 deactivateForms();
 
-export { init, activateForms, setInputAddress };
+export { initForm, activateForms, setInputAddress };
