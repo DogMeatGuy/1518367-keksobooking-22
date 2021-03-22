@@ -1,4 +1,4 @@
-const housingPriceResource = {
+const housingMinPrice = {
   bungalow: 0,
   flat: 1000,
   house: 5000,
@@ -10,4 +10,4 @@ const MapGeo = {
   LNG: 139.69171,
 }
 
-export { housingPriceResource, MapGeo };
+export { housingMinPrice, MapGeo };

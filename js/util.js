@@ -1,3 +1,5 @@
+const MAX_VALUE_DOT = 5;
+
 
 //Функция возвращающая случайное целое число число из заданного диапозона(включительно)
 
@@ -20,7 +22,7 @@ const getRandomFloat = (min, max) => {
     return errorMessage;
   }
   const getRandomFloat = Math.random() * (max - min + 1) + min;
-  return +getRandomFloat.toFixed(5);
+  return +getRandomFloat.toFixed(MAX_VALUE_DOT);
 }
 
 //Функция возвращающая случайный элемент массива
@@ -43,4 +45,4 @@ const getRandomArray = (array) => {
   return randomArray;
 };
 
-export { getRandomNumber, getRandomFloat, getRandomElement, getRandomArray };
+export { getRandomNumber, getRandomFloat, getRandomElement, getRandomArray, MAX_VALUE_DOT };
