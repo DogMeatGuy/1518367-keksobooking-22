@@ -1,7 +1,6 @@
 import { getPopupCard } from './popup.js';
 import { activateForms, setInputAddress } from './form.js';
 import { MapGeo } from './consts.js'
-import { getData } from './api.js';
 
 
 const createMap = () => {
@@ -65,7 +64,7 @@ const resetMainMarker = () => {
   mainMarker.setLatLng([MapGeo.LAT, MapGeo.LNG]);
 };
 
-const addMarkers = (data) => {
+const addMarkers = (data, map) => {
   data.forEach(({ author, offer, location }) => {
     const marker = createMarker(location.lat, location.lng, createIcon('./img/pin.svg'));
     marker
@@ -80,19 +79,15 @@ const addMarkers = (data) => {
 };
 
 
-const sendSuccess = () => {
-  getData((data) => {
-    addMarkers(data);
-  })
-}
 
 
-const initMap = () => {
+
+const initMap = (data) => {
   const map = createMap();
   mainMarker = createMarker(MapGeo.LAT, MapGeo.LNG, createIcon('./img/main-pin.svg'), onMainMarkerMove);
   mainMarker.addTo(map);
-  getData(sendSuccess);
+  addMarkers(data ,map)
 };
 
 
-export { initMap, resetMainMarker };
+export { initMap, resetMainMarker, addMarkers };

@@ -1,13 +1,18 @@
-const succesModalTemplate = document.querySelector('#success').content.querySelector('.success');
-const errorModalTemplate = document.querySelector('#error').content.querySelector('.error');
-const errorModalOpenBtn = errorModalTemplate.querySelector('.error__button');
+const main = document.querySelector('main');
+const successTemplate = document.querySelector('#success').content.cloneNode(true);
+const successPopup = successTemplate.querySelector('.success');
+const errorTemplate = document.querySelector('#error').content;
+const errorPopup = errorTemplate.querySelector('.error').cloneNode(true);
+const closeErrorButton = errorPopup.querySelector('.error__button');
+
+const eventCode = 27;
 
 const isEscEvent = (evt) => {
-  return evt.key === 'Escape' || evt.key === 'Esc' || evt.code === 27;
+  return evt.key === 'Escape' || evt.key === 'Esc' || evt.code === eventCode;
 };
 
-const errorModal = () => {
-  document.querySelector('main').appendChild(errorModalTemplate);
+const showErrorModal = () => {
+  main.appendChild(errorPopup);
   const onPopupEscKeydown = (evt) => {
     if (isEscEvent(evt)) {
       evt.preventDefault();
@@ -20,16 +25,16 @@ const errorModal = () => {
   });
 
   const closeErrorModal = () => {
-    errorModalTemplate.remove();
+    errorPopup.remove();
     document.removeEventListener('keydown', onPopupEscKeydown);
   };
-  errorModalOpenBtn.addEventListener('click', () => {
+  closeErrorButton.addEventListener('click', () => {
     closeErrorModal();
   });
 };
 
 const successModal = () => {
-  document.querySelector('main').appendChild(succesModalTemplate);
+  main.appendChild(successPopup);
   const onPopupEscKeydown = (evt) => {
     if (isEscEvent(evt)) {
       evt.preventDefault();
@@ -41,9 +46,9 @@ const successModal = () => {
     closeSuccessModal();
   });
   const closeSuccessModal = () => {
-    succesModalTemplate.remove();
+    successPopup.remove();
     document.removeEventListener('keydown', onPopupEscKeydown);
   };
 }
 
-export { successModal, errorModal };
+export { successModal, showErrorModal };

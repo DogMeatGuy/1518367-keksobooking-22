@@ -1,7 +1,7 @@
 import { sendData } from './api.js';
 import { housingMinPrice, MapGeo } from './consts.js';
 import { resetMainMarker } from './map.js';
-import { successModal, errorModal } from './modal.js';
+import { successModal, showErrorModal } from './modal.js';
 import { MAX_VALUE_DOT } from './util.js';
 
 const adForm = document.querySelector('.ad-form');
@@ -136,8 +136,7 @@ const formValidity = () => {
   });
 };
 
-
-const onFormSuccess = () => {
+const universalReset = () => {
   headline.value = '';
   resetMainMarker();
   housingType.value = typeDefault;
@@ -150,28 +149,22 @@ const onFormSuccess = () => {
     element.checked = false;
   });
   description.value = descriptionDefault;
+};
+
+const onFormSuccess = () => {
+  universalReset();
   successModal();
 };
+
 const resetForm = () => {
   btnReset.addEventListener('click', (evt) => {
     evt.preventDefault();
-    headline.value = '';
-    resetMainMarker();
-    housingType.value = typeDefault;
-    setDefaultInputPrice();
-    timeIn.value = timeInDefault;
-    timeOut.value = timeOutDefault;
-    capacity.value = capacityDefault;
-    numberRooms.value = capacityDefault;
-    featureCheckbox.forEach(element => {
-      element.checked = false;
-    });
-    description.value = descriptionDefault;
+    universalReset();
   })
 }
 
 const onError = () => {
-  errorModal();
+  showErrorModal();
 };
 
 const setUserFormSubmit = (onSuccess) => {
