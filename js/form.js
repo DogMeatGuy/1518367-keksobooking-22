@@ -1,5 +1,6 @@
 import { sendData } from './api.js';
 import { housingMinPrice, MapGeo } from './consts.js';
+import { resetMainMarker } from './map.js';
 import { successModal, errorModal } from './modal.js';
 import { MAX_VALUE_DOT } from './util.js';
 
@@ -53,6 +54,7 @@ const activateForms = () => {
   adForm.classList.remove('ad-form--disabled');
   setDefaultInputAdress();
   activateFormElements(formElements);
+
 };
 
 let setDefaultInputPrice = () => {
@@ -137,7 +139,7 @@ const formValidity = () => {
 
 const onFormSuccess = () => {
   headline.value = '';
-  setDefaultInputAdress();
+  resetMainMarker();
   housingType.value = typeDefault;
   setDefaultInputPrice();
   timeIn.value = timeInDefault;
@@ -154,7 +156,7 @@ const resetForm = () => {
   btnReset.addEventListener('click', (evt) => {
     evt.preventDefault();
     headline.value = '';
-    setDefaultInputAdress();
+    resetMainMarker();
     housingType.value = typeDefault;
     setDefaultInputPrice();
     timeIn.value = timeInDefault;
@@ -193,5 +195,6 @@ const initForm = () => {
 }
 
 deactivateForms();
+
 
 export { initForm, activateForms, setInputAddress };

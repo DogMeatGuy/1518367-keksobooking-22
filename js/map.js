@@ -24,6 +24,9 @@ const createMap = () => {
   return map;
 };
 
+
+
+
 let mainMarker;
 
 const createIcon = (iconUrl) => {
@@ -58,6 +61,10 @@ const createMarker = (lat, lng, icon, onMarkerMove) => {
   return marker;
 };
 
+const resetMainMarker = () => {
+  mainMarker.setLatLng([MapGeo.LAT, MapGeo.LNG]);
+};
+
 const addMarkers = (data) => {
   data.forEach(({ author, offer, location }) => {
     const marker = createMarker(location.lat, location.lng, createIcon('./img/pin.svg'));
@@ -79,14 +86,13 @@ const sendSuccess = () => {
   })
 }
 
-const map = createMap();
-
 
 const initMap = () => {
+  const map = createMap();
   mainMarker = createMarker(MapGeo.LAT, MapGeo.LNG, createIcon('./img/main-pin.svg'), onMainMarkerMove);
   mainMarker.addTo(map);
   getData(sendSuccess);
 };
 
 
-export { initMap };
+export { initMap, resetMainMarker };
