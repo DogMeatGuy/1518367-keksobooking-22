@@ -1,9 +1,7 @@
 import { getPopupCard } from './popup.js';
 import { activateForms, setInputAddress } from './form.js';
 import { MapGeo } from './consts.js'
-
-
-
+import { getData } from './api.js';
 
 
 const createMap = () => {
@@ -15,7 +13,7 @@ const createMap = () => {
     .setView({
       lat: MapGeo.LAT,
       lng: MapGeo.LNG,
-    }, 8);
+    }, 10);
 
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -60,24 +58,34 @@ const createMarker = (lat, lng, icon, onMarkerMove) => {
   return marker;
 };
 
-
-const addMarkers = (items, map) => {
-  items.forEach((item) => {
-    item.location.x
-    item.location.y
-    const offerMarker = createMarker(item.location.x, item.location.y, createIcon('./img/pin.svg'));
-    offerMarker.bindPopup(getPopupCard(item), { keepInView: true });
-    offerMarker.addTo(map);
+const addMarkers = (data) => {
+  data.forEach(({ author, offer, location }) => {
+    const marker = createMarker(location.lat, location.lng, createIcon('./img/pin.svg'));
+    marker
+      .addTo(map)
+      .bindPopup(
+        getPopupCard({ author, offer, location }),
+        {
+          keepInView: true,
+        },
+      );
   });
 };
 
 
+const sendSuccess = () => {
+  getData((data) => {
+    addMarkers(data);
+  })
+}
 
-const initMap = (offerMarker) => {
-  const map = createMap();
+const map = createMap();
+
+
+const initMap = () => {
   mainMarker = createMarker(MapGeo.LAT, MapGeo.LNG, createIcon('./img/main-pin.svg'), onMainMarkerMove);
   mainMarker.addTo(map);
-  addMarkers(offerMarker, map);
+  getData(sendSuccess);
 };
 
 
