@@ -3,9 +3,6 @@ import { activateForms, setInputAddress } from './form.js';
 import { MapGeo } from './consts.js'
 
 
-
-
-
 const createMap = () => {
 
   const map = L.map('map-canvas')
@@ -15,7 +12,7 @@ const createMap = () => {
     .setView({
       lat: MapGeo.LAT,
       lng: MapGeo.LNG,
-    }, 8);
+    }, 10);
 
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -25,6 +22,9 @@ const createMap = () => {
   ).addTo(map);
   return map;
 };
+
+
+
 
 let mainMarker;
 
@@ -60,25 +60,34 @@ const createMarker = (lat, lng, icon, onMarkerMove) => {
   return marker;
 };
 
+const resetMainMarker = () => {
+  mainMarker.setLatLng([MapGeo.LAT, MapGeo.LNG]);
+};
 
-const addMarkers = (items, map) => {
-  items.forEach((item) => {
-    item.location.x
-    item.location.y
-    const offerMarker = createMarker(item.location.x, item.location.y, createIcon('./img/pin.svg'));
-    offerMarker.bindPopup(getPopupCard(item), { keepInView: true });
-    offerMarker.addTo(map);
+const addMarkers = (data, map) => {
+  data.forEach(({ author, offer, location }) => {
+    const marker = createMarker(location.lat, location.lng, createIcon('./img/pin.svg'));
+    marker
+      .addTo(map)
+      .bindPopup(
+        getPopupCard({ author, offer, location }),
+        {
+          keepInView: true,
+        },
+      );
   });
 };
 
 
 
-const initMap = (offerMarker) => {
+
+
+const initMap = (data) => {
   const map = createMap();
   mainMarker = createMarker(MapGeo.LAT, MapGeo.LNG, createIcon('./img/main-pin.svg'), onMainMarkerMove);
   mainMarker.addTo(map);
-  addMarkers(offerMarker, map);
+  addMarkers(data ,map)
 };
 
 
-export { initMap };
+export { initMap, resetMainMarker, addMarkers };

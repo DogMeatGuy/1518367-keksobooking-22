@@ -1,11 +1,18 @@
-import { houseResource } from './data.js';
+const PHOTO_IMG_WIDTH = 45;
+const PHOTO_IMG_HEIGHT = 40
 
+const houseResource = {
+  palace: 'Дворец',
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalow: 'Бунгало',
+}
 
 //Функция заполняющая шаблон попапа
 
 const popupCardTemplate = document.querySelector('#card').content;
 
-const getPopupCard = ({ offer, author, location }) => {
+const getPopupCard = ({ offer, author }) => {
   const popupCard = popupCardTemplate.cloneNode(true);
   const featureListElement = popupCard.querySelector('.popup__features');
   const popupTitle = popupCard.querySelector('.popup__title');
@@ -24,7 +31,7 @@ const getPopupCard = ({ offer, author, location }) => {
   }
 
   if (offer.address) {
-    popupAddress.textContent = `${offer.address.x} ${offer.address.y}`
+    popupAddress.textContent = offer.address;
   }
 
   else {
@@ -88,7 +95,7 @@ const getPopupCard = ({ offer, author, location }) => {
   if ((offer.photos).length >= 0) {
     popupPhotos.textContent = ' ';
     offer.photos.forEach((photo) => {
-      const photoImg = new Image(45, 40);
+      const photoImg = new Image(PHOTO_IMG_WIDTH, PHOTO_IMG_HEIGHT);
       photoImg.classList.add('popup__photo');
       photoImg.src = photo;
       popupPhotos.append(photoImg);

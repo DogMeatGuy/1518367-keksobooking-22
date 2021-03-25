@@ -1,4 +1,7 @@
+import { sendData } from './api.js';
 import { housingMinPrice, MapGeo } from './consts.js';
+import { resetMainMarker } from './map.js';
+import { successModal, showErrorModal } from './modal.js';
 import { MAX_VALUE_DOT } from './util.js';
 
 const adForm = document.querySelector('.ad-form');
@@ -8,10 +11,18 @@ const formElements = document.querySelectorAll('.map__filter, .map__features, .a
 const timeIn = adForm.querySelector('#timein');
 const timeOut = adForm.querySelector('#timeout');
 const price = adForm.querySelector('#price');
+const description = document.querySelector('#description');
 const housingType = adForm.querySelector('#type');
 const headline = adForm.querySelector('#title');
 const numberRooms = document.querySelector('#room_number');
 const capacity = document.querySelector('#capacity');
+const typeDefault = document.querySelector('#type').value;
+const timeInDefault = document.querySelector('#timein').value;
+const timeOutDefault = document.querySelector('#timeout').value;
+const capacityDefault = document.querySelector('#capacity').value;
+const featureCheckbox = document.querySelectorAll('.feature__checkbox');
+const descriptionDefault = document.querySelector('#description').value;
+const btnReset = document.querySelector('.ad-form__reset');
 
 const MIN_HEADLINE_LENGTH = 30;
 const MAX_HEADLINE_LENGTH = 100;
@@ -43,6 +54,7 @@ const activateForms = () => {
   adForm.classList.remove('ad-form--disabled');
   setDefaultInputAdress();
   activateFormElements(formElements);
+
 };
 
 let setDefaultInputPrice = () => {
@@ -89,7 +101,7 @@ const formValidity = () => {
     const roomNumberValue = Number(numberRooms.value);
     const capacityValue = Number(capacity.value);
     let message = '';
-    if (roomNumberValue < capacityValue && roomNumberValue == ONE_ROOM_VALUE ) {
+    if (roomNumberValue < capacityValue && roomNumberValue == ONE_ROOM_VALUE) {
       message = 'Слишком много гостей для ' + (roomNumberValue) + ' комнаты. Количество комнат может соответствовать количеству гостей но не может быть меньше количества гостей.'
     } else if (roomNumberValue < capacityValue && roomNumberValue == TWO_ROOM_VALUE) {
       message = 'Слишком много гостей для ' + (roomNumberValue) + ' комнат. Количество комнат может соответствовать количеству гостей но не может быть меньше количества гостей.'
@@ -124,12 +136,58 @@ const formValidity = () => {
   });
 };
 
+const universalReset = () => {
+  headline.value = '';
+  resetMainMarker();
+  housingType.value = typeDefault;
+  setDefaultInputPrice();
+  timeIn.value = timeInDefault;
+  timeOut.value = timeOutDefault;
+  capacity.value = capacityDefault;
+  numberRooms.value = capacityDefault;
+  featureCheckbox.forEach(element => {
+    element.checked = false;
+  });
+  description.value = descriptionDefault;
+};
+
+const onFormSuccess = () => {
+  universalReset();
+  successModal();
+};
+
+const resetForm = () => {
+  btnReset.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    universalReset();
+  })
+}
+
+const onError = () => {
+  showErrorModal();
+};
+
+const setUserFormSubmit = (onSuccess) => {
+  adForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    sendData(
+      onSuccess,
+      onError,
+      new FormData(evt.target),
+    );
+  });
+};
+
 const initForm = () => {
+  resetForm();
   setDefaultInputPrice();
   formValidity();
   roomNumberLoadHandler();
+  setUserFormSubmit(onFormSuccess);
 }
 
 deactivateForms();
+
 
 export { initForm, activateForms, setInputAddress };
