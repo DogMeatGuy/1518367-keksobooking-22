@@ -1,5 +1,5 @@
 import { sendData } from './api.js';
-import { housingMinPrice, MapGeo } from './consts.js';
+import { HousingMinPrice, MapGeo } from './consts.js';
 import { resetMainMarker } from './map.js';
 import { successModal, showErrorModal } from './modal.js';
 import { MAX_VALUE_DOT } from './util.js';
@@ -28,10 +28,6 @@ const MIN_HEADLINE_LENGTH = 30;
 const MAX_HEADLINE_LENGTH = 100;
 const DEFAULT_VALUE_PRICE = 1000;
 const PRICE_MAX = 1000000;
-const QUANTITY_MIN = 0;
-const QUANTITY_MAX = 100;
-const ONE_ROOM_VALUE = 1;
-const TWO_ROOM_VALUE = 2;
 
 
 
@@ -73,6 +69,7 @@ const setDefaultInputAdress = () => {
   setInputAddress(MapGeo.LAT, MapGeo.LNG);
 }
 
+
 const formValidity = () => {
   price.addEventListener('input', () => {
     if (price.validity.valueMissing) {
@@ -83,8 +80,8 @@ const formValidity = () => {
   });
 
   housingType.addEventListener('change', () => {
-    price.placeholder = housingMinPrice[housingType.value];
-    price.min = housingMinPrice[housingType.value];
+    price.placeholder = HousingMinPrice[housingType.value.toUpperCase()];
+    price.min = HousingMinPrice[housingType.value.toUpperCase()];
   });
 
   timeIn.addEventListener('change', (evt) => {
@@ -97,21 +94,42 @@ const formValidity = () => {
     timeIn.value = evt.target.value;
   });
 
-  capacity.addEventListener('change', () => {
-    const roomNumberValue = Number(numberRooms.value);
-    const capacityValue = Number(capacity.value);
-    let message = '';
-    if (roomNumberValue < capacityValue && roomNumberValue == ONE_ROOM_VALUE) {
-      message = 'Слишком много гостей для ' + (roomNumberValue) + ' комнаты. Количество комнат может соответствовать количеству гостей но не может быть меньше количества гостей.'
-    } else if (roomNumberValue < capacityValue && roomNumberValue == TWO_ROOM_VALUE) {
-      message = 'Слишком много гостей для ' + (roomNumberValue) + ' комнат. Количество комнат может соответствовать количеству гостей но не может быть меньше количества гостей.'
-    } else if (roomNumberValue == QUANTITY_MAX && capacityValue != QUANTITY_MIN) {
-      message = 'Невозможно выбрать этот вариант, так как слишком большое количество комнат. Выберите пожалуйста вариант "Не для гостей"'
-    } else if (capacityValue == QUANTITY_MIN && roomNumberValue != QUANTITY_MAX) {
-      message = 'Невозможно выбрать этот вариант, так как нельзя использовать вариант "Не для гостей" для выбранного количества комнат. Выберите вариант "100 комнат"'
+  numberRooms.addEventListener('change', (evt) => {
+    switch (evt.target.value) {
+      case '1':
+        capacity.options[0].disabled = true;
+        capacity.options[1].disabled = true;
+        capacity.options[2].disabled = false;
+        capacity.options[3].disabled = true;
+        capacity.options[2].selected = true;
+        break;
+      case '2':
+        capacity.options[0].disabled = true;
+        capacity.options[1].disabled = false;
+        capacity.options[2].disabled = false;
+        capacity.options[3].disabled = true;
+        capacity.options[1].selected = true;
+        break;
+      case '3':
+        capacity.options[0].disabled = false;
+        capacity.options[1].disabled = false;
+        capacity.options[2].disabled = false;
+        capacity.options[3].disabled = true;
+        capacity.options[0].selected = true;
+        break;
+      case '100':
+        capacity.options[0].disabled = true;
+        capacity.options[1].disabled = true;
+        capacity.options[2].disabled = true;
+        capacity.options[3].disabled = false;
+        capacity.options[3].selected = true;
+        break;
+      default:
+        capacity.options[0].disabled = false;
+        capacity.options[1].disabled = false;
+        capacity.options[2].disabled = false;
+        capacity.options[3].disabled = false;
     }
-    capacity.setCustomValidity(message);
-    capacity.reportValidity();
   });
 
   headline.addEventListener('input', () => {

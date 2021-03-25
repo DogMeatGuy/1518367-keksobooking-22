@@ -1,7 +1,10 @@
 import { getPopupCard } from './popup.js';
 import { activateForms, setInputAddress } from './form.js';
 import { MapGeo } from './consts.js'
+import { filterDeclarations } from './filter.js';
 
+
+const DECLARATION_COUNT = 10;
 
 const createMap = () => {
 
@@ -60,12 +63,14 @@ const createMarker = (lat, lng, icon, onMarkerMove) => {
   return marker;
 };
 
+
 const resetMainMarker = () => {
   mainMarker.setLatLng([MapGeo.LAT, MapGeo.LNG]);
 };
 
 const addMarkers = (data, map) => {
-  data.forEach(({ author, offer, location }) => {
+  const filteredData = filterDeclarations(data).slice(0, DECLARATION_COUNT);
+  filteredData.forEach(({ author, offer, location }) => {
     const marker = createMarker(location.lat, location.lng, createIcon('./img/pin.svg'));
     marker
       .addTo(map)
@@ -80,13 +85,11 @@ const addMarkers = (data, map) => {
 
 
 
-
-
-const initMap = (data) => {
+const initMap = () => {
   const map = createMap();
   mainMarker = createMarker(MapGeo.LAT, MapGeo.LNG, createIcon('./img/main-pin.svg'), onMainMarkerMove);
   mainMarker.addTo(map);
-  addMarkers(data ,map)
+
 };
 
 
