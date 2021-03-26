@@ -1,25 +1,30 @@
 import { getPopupCard } from './popup.js';
 import { activateForms, setInputAddress } from './form.js';
-import { MapGeo } from './consts.js'
-import { filterDeclarations, setFilterChange } from './filter.js';
+import { IconAnchor, IconSize, MapGeo } from './consts.js'
+import { filterDeclarations } from './filter.js';
 
 
-const DECLARATION_COUNT = 10;
+const DEFAULT_SCALE = 10;
+
+let map;
+
+let mainMarker;
+
+let markerLayer;
 
 let markers = [];
 
 const createMap = () => {
-
-  const map = L.map('map-canvas')
+  const map = window.L.map('map-canvas')
     .on('load', () => {
       activateForms();
     })
     .setView({
       lat: MapGeo.LAT,
       lng: MapGeo.LNG,
-    }, 10);
+    }, DEFAULT_SCALE);
 
-  L.tileLayer(
+  window.L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -28,21 +33,13 @@ const createMap = () => {
   return map;
 };
 
-
-
-
-let mainMarker;
-
-let markerLayer;
-
 const createIcon = (iconUrl) => {
-  return L.icon({
+  return window.L.icon({
     iconUrl,
-    iconSize: [52, 52],
-    iconAnchor: [26, 52],
+    iconSize: [IconSize.WIDTH, IconSize.HEIGHT],
+    iconAnchor: [IconAnchor.WIDTH, IconAnchor.HEIGHT],
   });
 };
-
 
 const onMainMarkerMove = () => {
   const { lat, lng } = mainMarker.getLatLng();
@@ -51,7 +48,7 @@ const onMainMarkerMove = () => {
 
 
 const createMarker = (lat, lng, icon, onMarkerMove) => {
-  const marker = L.marker(
+  const marker = window.L.marker(
     {
       lat,
       lng,
@@ -68,11 +65,14 @@ const createMarker = (lat, lng, icon, onMarkerMove) => {
 };
 
 
-const resetMainMarker = () => {
+const resetMap = () => {
+  map.setView({
+    lat: MapGeo.LAT,
+    lng: MapGeo.LNG,
+  }, DEFAULT_SCALE);
   mainMarker.setLatLng([MapGeo.LAT, MapGeo.LNG]);
+  updateMarkers();
 };
-
-
 
 const addMarkers = (data, container) => {
   data.forEach(({ author, offer, location }) => {
@@ -90,19 +90,18 @@ const addMarkers = (data, container) => {
 
 const updateMarkers = () => {
   markerLayer.clearLayers();
-  const filteredData = filterDeclarations(markers).slice(0, DECLARATION_COUNT);
+  const filteredData = filterDeclarations(markers);
   addMarkers(filteredData, markerLayer);
 };
 
 const initMap = (data) => {
   markers = data;
-  const map = createMap();
+  map = createMap();
   mainMarker = createMarker(MapGeo.LAT, MapGeo.LNG, createIcon('./img/main-pin.svg'), onMainMarkerMove);
   mainMarker.addTo(map);
-  markerLayer = L.layerGroup().addTo(map);
+  markerLayer = window.L.layerGroup().addTo(map);
   updateMarkers();
-  setFilterChange(updateMarkers);
 };
 
 
-export { initMap, resetMainMarker, updateMarkers };
+export { initMap, resetMap, updateMarkers };

@@ -1,5 +1,5 @@
 import {HousungPriceValue} from './consts.js'
-
+import { updateMarkers } from './map.js';
 
 const mapFilterForm = document.querySelector('.map__filters');
 const housingType = mapFilterForm.querySelector('#housing-type');
@@ -11,7 +11,6 @@ const OFFER_PRICE_MIN = 10000;
 const OFFER_PRICE_MAX = 50000;
 const MAX_PINS = 10;
 const RERENDER_DELAY = 500;
-
 
 
 const filterByType = (ad) => {
@@ -67,18 +66,12 @@ const filterDeclarations = (data) => {
   return filteredPins;
 }
 
-const setFilterChange = (cb) => {
-  mapFilterForm.addEventListener('change', () => {
-    cb(_.debounce(
-      () => cb(),
-      RERENDER_DELAY,
-    ));
-
-  })
+const initFilter = () => {
+  mapFilterForm.addEventListener('change', _.debounce(updateMarkers, RERENDER_DELAY))
 }
 
 const resetFilters = () => {
   mapFilterForm.reset();
 };
 
-export { filterDeclarations, setFilterChange, resetFilters }
+export { filterDeclarations, initFilter, resetFilters }

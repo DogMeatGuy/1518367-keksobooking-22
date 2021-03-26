@@ -5,6 +5,13 @@ const HousingMinPrice = {
   PALACE: 10000,
 };
 
+const numberOfRooms = {
+  1: [1],
+  2: [1,2],
+  3: [1,2,3],
+  100: [0],
+};
+
 const HousungPriceValue = {
   MIDDLE: 'middle',
   LOW: 'low',
@@ -16,4 +23,14 @@ const MapGeo = {
   LNG: 139.69171,
 }
 
-export { HousingMinPrice, HousungPriceValue, MapGeo };
+const IconSize = {
+  WIDTH: 52,
+  HEIGHT: 52,
+};
+
+const IconAnchor = {
+  WIDTH: 26,
+  HEIGHT: 52,
+};
+
+export { HousingMinPrice, HousungPriceValue, MapGeo, IconSize, IconAnchor, numberOfRooms };
