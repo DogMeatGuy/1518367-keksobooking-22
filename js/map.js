@@ -1,10 +1,12 @@
 import { getPopupCard } from './popup.js';
 import { activateForms, setInputAddress } from './form.js';
 import { MapGeo } from './consts.js'
-import { filterDeclarations } from './filter.js';
+import { filterDeclarations, setFilterChange } from './filter.js';
 
 
 const DECLARATION_COUNT = 10;
+
+let markers = [];
 
 const createMap = () => {
 
@@ -30,6 +32,8 @@ const createMap = () => {
 
 
 let mainMarker;
+
+let markerLayer;
 
 const createIcon = (iconUrl) => {
   return L.icon({
@@ -68,12 +72,13 @@ const resetMainMarker = () => {
   mainMarker.setLatLng([MapGeo.LAT, MapGeo.LNG]);
 };
 
-const addMarkers = (data, map) => {
-  const filteredData = filterDeclarations(data).slice(0, DECLARATION_COUNT);
-  filteredData.forEach(({ author, offer, location }) => {
+
+
+const addMarkers = (data, container) => {
+  data.forEach(({ author, offer, location }) => {
     const marker = createMarker(location.lat, location.lng, createIcon('./img/pin.svg'));
     marker
-      .addTo(map)
+      .addTo(container)
       .bindPopup(
         getPopupCard({ author, offer, location }),
         {
@@ -83,14 +88,21 @@ const addMarkers = (data, map) => {
   });
 };
 
+const updateMarkers = () => {
+  markerLayer.clearLayers();
+  const filteredData = filterDeclarations(markers).slice(0, DECLARATION_COUNT);
+  addMarkers(filteredData, markerLayer);
+};
 
-
-const initMap = () => {
+const initMap = (data) => {
+  markers = data;
   const map = createMap();
   mainMarker = createMarker(MapGeo.LAT, MapGeo.LNG, createIcon('./img/main-pin.svg'), onMainMarkerMove);
   mainMarker.addTo(map);
-
+  markerLayer = L.layerGroup().addTo(map);
+  updateMarkers();
+  setFilterChange(updateMarkers);
 };
 
 
-export { initMap, resetMainMarker, addMarkers };
+export { initMap, resetMainMarker, updateMarkers };

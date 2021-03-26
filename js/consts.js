@@ -5,10 +5,15 @@ const HousingMinPrice = {
   PALACE: 10000,
 };
 
+const HousungPriceValue = {
+  MIDDLE: 'middle',
+  LOW: 'low',
+  HIGH: 'high',
+};
 
 const MapGeo = {
   LAT: 35.68950,
   LNG: 139.69171,
 }
 
-export { HousingMinPrice, MapGeo };
+export { HousingMinPrice, HousungPriceValue, MapGeo };

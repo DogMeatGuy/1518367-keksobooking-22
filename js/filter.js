@@ -1,3 +1,6 @@
+import {HousungPriceValue} from './consts.js'
+
+
 const mapFilterForm = document.querySelector('.map__filters');
 const housingType = mapFilterForm.querySelector('#housing-type');
 const housingPrice = mapFilterForm.querySelector('#housing-price');
@@ -7,6 +10,9 @@ const FILTER_DEFAULT_VALUE = 'any';
 const OFFER_PRICE_MIN = 10000;
 const OFFER_PRICE_MAX = 50000;
 const MAX_PINS = 10;
+const RERENDER_DELAY = 500;
+
+
 
 const filterByType = (ad) => {
   return housingType.value === FILTER_DEFAULT_VALUE || ad.offer.type === housingType.value
@@ -14,11 +20,11 @@ const filterByType = (ad) => {
 
 const filterByPrice = (ad) => {
   switch (housingPrice.value) {
-    case 'middle':
+    case HousungPriceValue.MIDDLE:
       return (ad.offer.price >= OFFER_PRICE_MIN) && (ad.offer.price <= OFFER_PRICE_MAX);
-    case 'low':
+    case HousungPriceValue.LOW:
       return ad.offer.price < OFFER_PRICE_MIN;
-    case 'high':
+    case HousungPriceValue.HIGH:
       return ad.offer.price > OFFER_PRICE_MAX;
     default:
       return true;
@@ -63,8 +69,16 @@ const filterDeclarations = (data) => {
 
 const setFilterChange = (cb) => {
   mapFilterForm.addEventListener('change', () => {
-    cb();
+    cb(_.debounce(
+      () => cb(),
+      RERENDER_DELAY,
+    ));
+
   })
 }
 
-export { filterDeclarations, setFilterChange }
+const resetFilters = () => {
+  mapFilterForm.reset();
+};
+
+export { filterDeclarations, setFilterChange, resetFilters }

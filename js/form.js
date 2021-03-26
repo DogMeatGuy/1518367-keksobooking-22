@@ -1,5 +1,6 @@
 import { sendData } from './api.js';
 import { HousingMinPrice, MapGeo } from './consts.js';
+import { resetFilters } from './filter.js';
 import { resetMainMarker } from './map.js';
 import { successModal, showErrorModal } from './modal.js';
 import { MAX_VALUE_DOT } from './util.js';
@@ -28,7 +29,10 @@ const MIN_HEADLINE_LENGTH = 30;
 const MAX_HEADLINE_LENGTH = 100;
 const DEFAULT_VALUE_PRICE = 1000;
 const PRICE_MAX = 1000000;
-
+const MAX_ROOM_VALUE = 100;
+const MIN_ROOM_VALUE = 0;
+const ONE_ROOM_VALUE = 1;
+const TWO_ROOM_VALUE = 2;
 
 
 const deactivateFormElements = (elements) => {
@@ -94,42 +98,21 @@ const formValidity = () => {
     timeIn.value = evt.target.value;
   });
 
-  numberRooms.addEventListener('change', (evt) => {
-    switch (evt.target.value) {
-      case '1':
-        capacity.options[0].disabled = true;
-        capacity.options[1].disabled = true;
-        capacity.options[2].disabled = false;
-        capacity.options[3].disabled = true;
-        capacity.options[2].selected = true;
-        break;
-      case '2':
-        capacity.options[0].disabled = true;
-        capacity.options[1].disabled = false;
-        capacity.options[2].disabled = false;
-        capacity.options[3].disabled = true;
-        capacity.options[1].selected = true;
-        break;
-      case '3':
-        capacity.options[0].disabled = false;
-        capacity.options[1].disabled = false;
-        capacity.options[2].disabled = false;
-        capacity.options[3].disabled = true;
-        capacity.options[0].selected = true;
-        break;
-      case '100':
-        capacity.options[0].disabled = true;
-        capacity.options[1].disabled = true;
-        capacity.options[2].disabled = true;
-        capacity.options[3].disabled = false;
-        capacity.options[3].selected = true;
-        break;
-      default:
-        capacity.options[0].disabled = false;
-        capacity.options[1].disabled = false;
-        capacity.options[2].disabled = false;
-        capacity.options[3].disabled = false;
+  capacity.addEventListener('change', () => {
+    const roomNumberValue = Number(numberRooms.value);
+    const capacityValue = Number(capacity.value);
+    let message = '';
+    if (roomNumberValue < capacityValue && roomNumberValue === ONE_ROOM_VALUE) {
+      message = 'Слишком много гостей для ' + (roomNumberValue) + ' комнаты. Количество комнат может соответствовать количеству гостей но не может быть меньше количества гостей.'
+    } else if (roomNumberValue < capacityValue && roomNumberValue === TWO_ROOM_VALUE) {
+      message = 'Слишком много гостей для ' + (roomNumberValue) + ' комнат. Количество комнат может соответствовать количеству гостей но не может быть меньше количества гостей.'
+    } else if (roomNumberValue === MAX_ROOM_VALUE && capacityValue !== MIN_ROOM_VALUE) {
+      message = 'Невозможно выбрать этот вариант, так как слишком большое количество комнат. Выберите пожалуйста вариант "Не для гостей"'
+    } else if (capacityValue === MIN_ROOM_VALUE && roomNumberValue !== MAX_ROOM_VALUE) {
+      message = 'Невозможно выбрать этот вариант, так как нельзя использовать вариант "Не для гостей" для выбранного количества комнат. Выберите вариант "100 комнат"'
     }
+    capacity.setCustomValidity(message);
+    capacity.reportValidity();
   });
 
   headline.addEventListener('input', () => {
@@ -156,9 +139,10 @@ const formValidity = () => {
 
 const universalReset = () => {
   headline.value = '';
+  price.value = '';
+  price.placeholder = DEFAULT_VALUE_PRICE;
   resetMainMarker();
   housingType.value = typeDefault;
-  setDefaultInputPrice();
   timeIn.value = timeInDefault;
   timeOut.value = timeOutDefault;
   capacity.value = capacityDefault;
@@ -167,6 +151,7 @@ const universalReset = () => {
     element.checked = false;
   });
   description.value = descriptionDefault;
+  resetFilters();
 };
 
 const onFormSuccess = () => {
