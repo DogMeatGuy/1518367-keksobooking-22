@@ -5,7 +5,6 @@ import { getData } from './api.js';
 import { initForm } from './form.js';
 import {initMap } from './map.js';
 import {initFilter } from './filter.js';
-import { addFile } from './avatar.js';
 
 
 const init = (data) => {
@@ -15,4 +14,3 @@ const init = (data) => {
 
 initForm();
 getData(init);
-addFile();

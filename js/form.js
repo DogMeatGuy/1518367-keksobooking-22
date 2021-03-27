@@ -1,5 +1,4 @@
 import { sendData } from './api.js';
-import { removeImg } from './avatar.js';
 import { HousingMinPrice, MapGeo, numberOfRooms } from './consts.js';
 import { resetFilters } from './filter.js';
 import { resetMap } from './map.js';
@@ -153,7 +152,6 @@ const universalReset = () => {
   description.value = descriptionDefault;
   resetFilters();
   resetMap();
-  removeImg();
 };
 
 const onFormSuccess = () => {
