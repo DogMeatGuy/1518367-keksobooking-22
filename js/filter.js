@@ -1,4 +1,4 @@
-import {HousungPriceValue} from './consts.js'
+import { HousungPriceValue } from './consts.js'
 import { updateMarkers } from './map.js';
 
 const mapFilterForm = document.querySelector('.map__filters');
