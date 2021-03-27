@@ -1,6 +1,7 @@
 import { sendData } from './api.js';
-import { housingMinPrice, MapGeo } from './consts.js';
-import { resetMainMarker } from './map.js';
+import { HousingMinPrice, MapGeo, numberOfRooms } from './consts.js';
+import { resetFilters } from './filter.js';
+import { resetMap } from './map.js';
 import { successModal, showErrorModal } from './modal.js';
 import { MAX_VALUE_DOT } from './util.js';
 
@@ -28,11 +29,7 @@ const MIN_HEADLINE_LENGTH = 30;
 const MAX_HEADLINE_LENGTH = 100;
 const DEFAULT_VALUE_PRICE = 1000;
 const PRICE_MAX = 1000000;
-const QUANTITY_MIN = 0;
-const QUANTITY_MAX = 100;
-const ONE_ROOM_VALUE = 1;
-const TWO_ROOM_VALUE = 2;
-
+const LENGTH_CHANGE_DIGIT = 1;
 
 
 const deactivateFormElements = (elements) => {
@@ -73,18 +70,19 @@ const setDefaultInputAdress = () => {
   setInputAddress(MapGeo.LAT, MapGeo.LNG);
 }
 
+
 const formValidity = () => {
   price.addEventListener('input', () => {
+    let message = '';
     if (price.validity.valueMissing) {
-      price.setCustomValidity('Обязательное поле. Максимальная цена — ' + (PRICE_MAX));
-    } else {
-      price.setCustomValidity('');
+      message = 'Обязательное поле. Максимальная цена — ' + (PRICE_MAX);
     }
+    price.setCustomValidity(message);
   });
 
   housingType.addEventListener('change', () => {
-    price.placeholder = housingMinPrice[housingType.value];
-    price.min = housingMinPrice[housingType.value];
+    price.placeholder = HousingMinPrice[housingType.value.toUpperCase()];
+    price.min = HousingMinPrice[housingType.value.toUpperCase()];
   });
 
   timeIn.addEventListener('change', (evt) => {
@@ -97,21 +95,24 @@ const formValidity = () => {
     timeIn.value = evt.target.value;
   });
 
-  capacity.addEventListener('change', () => {
-    const roomNumberValue = Number(numberRooms.value);
-    const capacityValue = Number(capacity.value);
-    let message = '';
-    if (roomNumberValue < capacityValue && roomNumberValue == ONE_ROOM_VALUE) {
-      message = 'Слишком много гостей для ' + (roomNumberValue) + ' комнаты. Количество комнат может соответствовать количеству гостей но не может быть меньше количества гостей.'
-    } else if (roomNumberValue < capacityValue && roomNumberValue == TWO_ROOM_VALUE) {
-      message = 'Слишком много гостей для ' + (roomNumberValue) + ' комнат. Количество комнат может соответствовать количеству гостей но не может быть меньше количества гостей.'
-    } else if (roomNumberValue == QUANTITY_MAX && capacityValue != QUANTITY_MIN) {
-      message = 'Невозможно выбрать этот вариант, так как слишком большое количество комнат. Выберите пожалуйста вариант "Не для гостей"'
-    } else if (capacityValue == QUANTITY_MIN && roomNumberValue != QUANTITY_MAX) {
-      message = 'Невозможно выбрать этот вариант, так как нельзя использовать вариант "Не для гостей" для выбранного количества комнат. Выберите вариант "100 комнат"'
-    }
-    capacity.setCustomValidity(message);
-    capacity.reportValidity();
+  addEventListener('change', () => {
+    const capacityOptions = capacity.querySelectorAll('option');
+    const roomsNumber = numberRooms.value;
+    capacityOptions.forEach((option) => {
+      option.disabled = true;
+    });
+
+    numberOfRooms[roomsNumber].forEach((numberOfSeats) => {
+      capacityOptions.forEach((option) => {
+        if (Number(option.value) === numberOfSeats) {
+          option.disabled = false;
+        }
+      });
+      if (!numberOfRooms[roomsNumber].includes(capacity.value)) {
+        const maxCapacity = numberOfRooms[roomsNumber][numberOfRooms[roomsNumber].length - LENGTH_CHANGE_DIGIT];
+        capacity.value = maxCapacity;
+      }
+    });
   });
 
   headline.addEventListener('input', () => {
@@ -138,9 +139,9 @@ const formValidity = () => {
 
 const universalReset = () => {
   headline.value = '';
-  resetMainMarker();
+  price.value = '';
+  price.placeholder = DEFAULT_VALUE_PRICE;
   housingType.value = typeDefault;
-  setDefaultInputPrice();
   timeIn.value = timeInDefault;
   timeOut.value = timeOutDefault;
   capacity.value = capacityDefault;
@@ -149,6 +150,8 @@ const universalReset = () => {
     element.checked = false;
   });
   description.value = descriptionDefault;
+  resetFilters();
+  resetMap();
 };
 
 const onFormSuccess = () => {
