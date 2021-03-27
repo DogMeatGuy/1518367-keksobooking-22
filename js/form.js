@@ -28,7 +28,7 @@ const btnReset = document.querySelector('.ad-form__reset');
 const MIN_HEADLINE_LENGTH = 30;
 const MAX_HEADLINE_LENGTH = 100;
 const DEFAULT_VALUE_PRICE = 1000;
-const PRICE_MAX = 1000000;
+const MAX_PRICE = 1000000;
 const LENGTH_CHANGE_DIGIT = 1;
 
 
@@ -75,7 +75,7 @@ const formValidity = () => {
   price.addEventListener('input', () => {
     let message = '';
     if (price.validity.valueMissing) {
-      message = 'Обязательное поле. Максимальная цена — ' + (PRICE_MAX);
+      message = 'Обязательное поле. Максимальная цена — ' + (MAX_PRICE);
     }
     price.setCustomValidity(message);
   });
