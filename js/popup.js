@@ -10,7 +10,7 @@ const houseResource = {
 
 //Функция заполняющая шаблон попапа
 
-const popupCardTemplate = document.querySelector('#card').content;
+const popupCardTemplate = document.querySelector('#card').content.querySelector('.popup');
 
 const getPopupCard = ({ offer, author }) => {
   const popupCard = popupCardTemplate.cloneNode(true);
